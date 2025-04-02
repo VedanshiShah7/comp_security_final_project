@@ -26,6 +26,14 @@ header p {
     font-size: 1.2em;
 }
 
+header p3 {
+    margin-top: 0;
+    font-size: 0.8em;
+    padding-bottom: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
 main {
     display: flex;
     flex-direction: column;
