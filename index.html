@@ -31,17 +31,32 @@
 
         <section id="quantumState">
             <h2>Quantum State Visualization</h2>
+            <p>This shows the bases and bits exchanged between Alice and Bob. Green means the bases matched, red means they did not.</p>
             <div id="animationContainer"></div>
         </section>
 
         <section id="visuals">
             <h2>Key Distribution Analysis</h2>
+            <p>This bar chart represents how many key bits matched between Alice and Bob, showing successful key agreement.</p>
             <canvas id="keyComparisonChart"></canvas>
         </section>
 
         <section id="eavesdropping">
             <h2>Eavesdropping Impact</h2>
+            <p>If eavesdropping is enabled, this line chart shows where the key was intercepted and possibly altered.</p>
             <canvas id="eavesdropChart"></canvas>
+        </section>
+
+        <section id="keyAccuracy">
+            <h2>Histogram of Matching Key Bits</h2>
+            <p>This histogram represents the distribution of matched key bits across different trials of the simulation.</p>
+            <canvas id="keyHistogram"></canvas>
+        </section>
+
+        <section id="eavesdropSuccess">
+            <h2>Eavesdropping Success Rate</h2>
+            <p>This pie chart shows how often the eavesdropper successfully alters the final key.</p>
+            <canvas id="eavesdropPieChart"></canvas>
         </section>
 
     </main>

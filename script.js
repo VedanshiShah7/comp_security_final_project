@@ -2,6 +2,9 @@ document.getElementById('themeToggle').addEventListener('change', function() {
     document.body.classList.toggle('dark-mode');
 });
 
+// Store chart instances globally so we can destroy them before updating
+let keyComparisonChart, eavesdropChart, keyHistogram, eavesdropPieChart;
+
 function runSimulation() {
     let numQubits = document.getElementById('numQubits').value;
     let eavesdrop = document.getElementById('eavesdrop').checked;
@@ -31,8 +34,14 @@ function updateVisualization(aliceBases, bobBases, aliceBits, bobBits, secureKey
         container.appendChild(div);
     });
 
+    // Destroy existing charts before creating new ones
+    if (keyComparisonChart) keyComparisonChart.destroy();
+    if (eavesdropChart) eavesdropChart.destroy();
+    if (keyHistogram) keyHistogram.destroy();
+    if (eavesdropPieChart) eavesdropPieChart.destroy();
+
     let ctx = document.getElementById('keyComparisonChart').getContext('2d');
-    new Chart(ctx, {
+    keyComparisonChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: Array.from({length: aliceBits.length}, (_, i) => `Q${i + 1}`),
@@ -45,7 +54,7 @@ function updateVisualization(aliceBases, bobBases, aliceBits, bobBits, secureKey
     });
 
     let eavesCtx = document.getElementById('eavesdropChart').getContext('2d');
-    new Chart(eavesCtx, {
+    eavesdropChart = new Chart(eavesCtx, {
         type: 'line',
         data: {
             labels: Array.from({length: aliceBits.length}, (_, i) => `Q${i + 1}`),
@@ -54,6 +63,31 @@ function updateVisualization(aliceBases, bobBases, aliceBits, bobBits, secureKey
                 data: eavesdropBits,
                 borderColor: 'red',
                 fill: false
+            }]
+        }
+    });
+
+    let histogramCtx = document.getElementById('keyHistogram').getContext('2d');
+    keyHistogram = new Chart(histogramCtx, {
+        type: 'bar',
+        data: {
+            labels: ['0%', '25%', '50%', '75%', '100%'],
+            datasets: [{
+                label: 'Matched Key Bits',
+                data: [2, 5, 10, 7, 3], // Example Data
+                backgroundColor: 'blue'
+            }]
+        }
+    });
+
+    let pieCtx = document.getElementById('eavesdropPieChart').getContext('2d');
+    eavesdropPieChart = new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: ['Successful Eavesdropping', 'Unchanged Key'],
+            datasets: [{
+                data: [eavesdropBits.filter(b => b === 1).length, eavesdropBits.filter(b => b === 0).length],
+                backgroundColor: ['red', 'green']
             }]
         }
     });
