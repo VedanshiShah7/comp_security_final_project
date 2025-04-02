@@ -3,55 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cryptography Visualizer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        input, select, button {
-            margin: 10px;
-            padding: 10px;
-        }
-        #output {
-            margin-top: 20px;
-            font-weight: bold;
-        }
-    </style>
+    <title>BB84 Quantum Key Distribution</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Cryptography Visualizer</h1>
-    <p>Enter text to encrypt and choose a method:</p>
-    <input type="text" id="inputText" placeholder="Enter text">
-    <select id="encryptionMethod">
-        <option value="caesar">Caesar Cipher</option>
-        <option value="reverse">Reverse Text</option>
-    </select>
-    <button onclick="encryptText()">Encrypt</button>
-    <p id="output"></p>
-
-    <script>
-        function encryptText() {
-            let text = document.getElementById("inputText").value;
-            let method = document.getElementById("encryptionMethod").value;
-            let encryptedText = "";
-
-            if (method === "caesar") {
-                encryptedText = caesarCipher(text, 3);
-            } else if (method === "reverse") {
-                encryptedText = text.split('').reverse().join('');
-            }
-
-            document.getElementById("output").innerText = "Encrypted: " + encryptedText;
-        }
-
-        function caesarCipher(str, shift) {
-            return str.replace(/[a-zA-Z]/g, function(c) {
-                let base = c < 'a' ? 65 : 97;
-                return String.fromCharCode((c.charCodeAt(0) - base + shift) % 26 + base);
-            });
-        }
-    </script>
+    <header>
+        <h1>BB84 Quantum Key Distribution Simulation</h1>
+    </header>
+    <main>
+        <section id="controls">
+            <label for="numQubits">Number of Qubits:</label>
+            <input type="number" id="numQubits" value="10" min="1" max="100">
+            <button onclick="runSimulation()">Run Simulation</button>
+        </section>
+        
+        <section id="visuals">
+            <canvas id="keyChart"></canvas>
+        </section>
+        
+        <section id="results">
+            <h2>Simulation Results</h2>
+            <pre id="output"></pre>
+        </section>
+    </main>
+    <script src="script.js"></script>
 </body>
 </html>
