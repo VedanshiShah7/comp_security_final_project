@@ -6,27 +6,40 @@
     <title>BB84 Quantum Key Distribution</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <header>
-        <h1>BB84 Quantum Key Distribution Simulation</h1>
+        <h1>BB84 Quantum Key Distribution</h1>
+        <p>Visualizing the secure quantum key exchange process with BB84 protocol.</p>
     </header>
-    <main>
-        <section id="controls">
-            <label for="numQubits">Number of Qubits:</label>
-            <input type="number" id="numQubits" value="10" min="1" max="100">
-            <button onclick="runSimulation()">Run Simulation</button>
-        </section>
-        
-        <section id="visuals">
-            <canvas id="keyChart"></canvas>
-        </section>
-        
-        <section id="results">
-            <h2>Simulation Results</h2>
-            <pre id="output"></pre>
-        </section>
-    </main>
-    <script src="script.js"></script>
+    
+    <div class="container">
+        <div class="simulation">
+            <h2>Quantum Transmission</h2>
+            <canvas id="blochSphere"></canvas>
+            <p>Qubits are encoded using Alice's random bases and transmitted securely.</p>
+        </div>
+
+        <div class="step-visuals">
+            <h2>BB84 Protocol Steps</h2>
+            <canvas id="bb84Steps"></canvas>
+            <p>Step-by-step visualization of Alice’s qubits, Bob’s measurements, and key agreement.</p>
+        </div>
+
+        <div class="results">
+            <h2>Key Agreement & Eavesdropping</h2>
+            <canvas id="keyComparisonChart"></canvas>
+            <p>Comparing Alice’s and Bob’s keys. Differences indicate eavesdropping!</p>
+        </div>
+
+        <div class="past-results">
+            <h2>Past Results</h2>
+            <canvas id="pastResultsChart"></canvas>
+            <p>Tracking past successful key agreements and error rates over multiple runs.</p>
+        </div>
+    </div>
+
+    <button onclick="runBB84()">Run BB84 Simulation</button>
 </body>
 </html>

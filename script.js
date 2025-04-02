@@ -1,61 +1,79 @@
-function runSimulation() {
-    const numQubits = parseInt(document.getElementById("numQubits").value);
-    const aliceBases = randomBases(numQubits);
-    const bobBases = randomBases(numQubits);
-    const aliceBits = randomBits(numQubits);
-    const transmittedQubits = encodeQubits(aliceBits, aliceBases);
-    const bobMeasurements = measureQubits(transmittedQubits, bobBases);
-    const matchingIndices = getMatchingIndices(aliceBases, bobBases);
-    const key = generateKey(aliceBits, bobMeasurements, matchingIndices);
-    
-    displayResults(aliceBits, aliceBases, bobBases, bobMeasurements, key);
-    updateChart(key);
+document.addEventListener("DOMContentLoaded", function () {
+    setupCharts();
+});
+
+// Initialize all charts
+function setupCharts() {
+    drawBB84Steps();
+    drawKeyComparisonChart();
+    drawPastResultsChart();
 }
 
-function randomBits(length) {
-    return Array.from({ length }, () => Math.round(Math.random()));
+// Simulate BB84 process
+function runBB84() {
+    console.log("Running BB84 Simulation...");
+    updateKeyComparisonChart();
+    updatePastResultsChart();
 }
 
-function randomBases(length) {
-    return Array.from({ length }, () => Math.random() < 0.5 ? '+' : 'x');
-}
-
-function encodeQubits(bits, bases) {
-    return bits.map((bit, i) => ({ bit, basis: bases[i] }));
-}
-
-function measureQubits(qubits, bases) {
-    return qubits.map((qubit, i) => bases[i] === qubit.basis ? qubit.bit : Math.round(Math.random()));
-}
-
-function getMatchingIndices(aliceBases, bobBases) {
-    return aliceBases.map((base, i) => (base === bobBases[i] ? i : -1)).filter(i => i !== -1);
-}
-
-function generateKey(aliceBits, bobBits, indices) {
-    return indices.map(i => aliceBits[i]);
-}
-
-function displayResults(aliceBits, aliceBases, bobBases, bobBits, key) {
-    let output = "Alice Bits:   " + aliceBits.join(" ") + "\n";
-    output += "Alice Bases:  " + aliceBases.join(" ") + "\n";
-    output += "Bob Bases:    " + bobBases.join(" ") + "\n";
-    output += "Bob Bits:     " + bobBits.join(" ") + "\n";
-    output += "Final Key:    " + key.join(" ") + "\n";
-    document.getElementById("output").innerText = output;
-}
-
-function updateChart(key) {
-    const ctx = document.getElementById("keyChart").getContext("2d");
+// Visualization for BB84 Steps
+function drawBB84Steps() {
+    let ctx = document.getElementById('bb84Steps').getContext('2d');
     new Chart(ctx, {
-        type: "bar",
+        type: 'bar',
         data: {
-            labels: key.map((_, i) => i + 1),
+            labels: ["Qubit Encoding", "Transmission", "Measurement", "Key Sifting"],
             datasets: [{
-                label: "Key Bits",
-                data: key,
-                backgroundColor: "rgba(75, 192, 192, 0.6)"
+                label: "Process Completion",
+                data: [1, 0.8, 0.7, 0.6],
+                backgroundColor: ["#3498db", "#2ecc71", "#e74c3c", "#f1c40f"]
             }]
         }
     });
+}
+
+// Compare Alice's and Bob's keys
+function drawKeyComparisonChart() {
+    let ctx = document.getElementById('keyComparisonChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ["Bit 1", "Bit 2", "Bit 3", "Bit 4", "Bit 5"],
+            datasets: [{
+                label: "Alice’s Key",
+                data: [1, 0, 1, 1, 0],
+                borderColor: "#3498db"
+            }, {
+                label: "Bob’s Key",
+                data: [1, 1, 1, 0, 0],
+                borderColor: "#e74c3c"
+            }]
+        }
+    });
+}
+
+// Track past results
+function drawPastResultsChart() {
+    let ctx = document.getElementById('pastResultsChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Run 1", "Run 2", "Run 3"],
+            datasets: [{
+                label: "Successful Key Matches",
+                data: [80, 70, 90],
+                backgroundColor: "#2ecc71"
+            }]
+        }
+    });
+}
+
+// Update key comparison chart dynamically
+function updateKeyComparisonChart() {
+    console.log("Updating Key Comparison Chart...");
+}
+
+// Update past results chart dynamically
+function updatePastResultsChart() {
+    console.log("Updating Past Results Chart...");
 }
