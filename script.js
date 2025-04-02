@@ -1,79 +1,60 @@
-document.addEventListener("DOMContentLoaded", function () {
-    setupCharts();
+document.getElementById('themeToggle').addEventListener('change', function() {
+    document.body.classList.toggle('dark-mode');
 });
 
-// Initialize all charts
-function setupCharts() {
-    drawBB84Steps();
-    drawKeyComparisonChart();
-    drawPastResultsChart();
+function runSimulation() {
+    let numQubits = document.getElementById('numQubits').value;
+    let eavesdrop = document.getElementById('eavesdrop').checked;
+
+    let aliceBases = Array.from({length: numQubits}, () => Math.random() > 0.5 ? 'X' : 'Z');
+    let bobBases = Array.from({length: numQubits}, () => Math.random() > 0.5 ? 'X' : 'Z');
+    let aliceBits = Array.from({length: numQubits}, () => Math.random() > 0.5 ? 1 : 0);
+    let bobBits = bobBases.map((b, i) => (b === aliceBases[i]) ? aliceBits[i] : Math.random() > 0.5 ? 1 : 0);
+    let secureKey = aliceBits.filter((b, i) => aliceBases[i] === bobBases[i]);
+
+    let eavesdropBits = eavesdrop ? bobBits.map(() => Math.random() > 0.5 ? 1 : 0) : [];
+
+    updateVisualization(aliceBases, bobBases, aliceBits, bobBits, secureKey, eavesdropBits);
 }
 
-// Simulate BB84 process
-function runBB84() {
-    console.log("Running BB84 Simulation...");
-    updateKeyComparisonChart();
-    updatePastResultsChart();
-}
+function updateVisualization(aliceBases, bobBases, aliceBits, bobBits, secureKey, eavesdropBits) {
+    let container = document.getElementById('animationContainer');
+    container.innerHTML = "";
 
-// Visualization for BB84 Steps
-function drawBB84Steps() {
-    let ctx = document.getElementById('bb84Steps').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ["Qubit Encoding", "Transmission", "Measurement", "Key Sifting"],
-            datasets: [{
-                label: "Process Completion",
-                data: [1, 0.8, 0.7, 0.6],
-                backgroundColor: ["#3498db", "#2ecc71", "#e74c3c", "#f1c40f"]
-            }]
-        }
+    aliceBases.forEach((base, i) => {
+        let div = document.createElement('div');
+        div.innerText = `Qubit ${i + 1}: ${base} (${aliceBits[i]}) → ${bobBases[i]} (${bobBits[i]})`;
+        div.classList.add("animated");
+        div.style.padding = "5px";
+        div.style.margin = "5px";
+        div.style.backgroundColor = (aliceBases[i] === bobBases[i]) ? "lightgreen" : "lightcoral";
+        container.appendChild(div);
     });
-}
 
-// Compare Alice's and Bob's keys
-function drawKeyComparisonChart() {
     let ctx = document.getElementById('keyComparisonChart').getContext('2d');
     new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ["Bit 1", "Bit 2", "Bit 3", "Bit 4", "Bit 5"],
-            datasets: [{
-                label: "Alice’s Key",
-                data: [1, 0, 1, 1, 0],
-                borderColor: "#3498db"
-            }, {
-                label: "Bob’s Key",
-                data: [1, 1, 1, 0, 0],
-                borderColor: "#e74c3c"
-            }]
-        }
-    });
-}
-
-// Track past results
-function drawPastResultsChart() {
-    let ctx = document.getElementById('pastResultsChart').getContext('2d');
-    new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ["Run 1", "Run 2", "Run 3"],
+            labels: Array.from({length: aliceBits.length}, (_, i) => `Q${i + 1}`),
             datasets: [{
-                label: "Successful Key Matches",
-                data: [80, 70, 90],
-                backgroundColor: "#2ecc71"
+                label: 'Correct Key Bits',
+                data: secureKey.map(() => 1),
+                backgroundColor: 'green'
             }]
         }
     });
-}
 
-// Update key comparison chart dynamically
-function updateKeyComparisonChart() {
-    console.log("Updating Key Comparison Chart...");
-}
-
-// Update past results chart dynamically
-function updatePastResultsChart() {
-    console.log("Updating Past Results Chart...");
+    let eavesCtx = document.getElementById('eavesdropChart').getContext('2d');
+    new Chart(eavesCtx, {
+        type: 'line',
+        data: {
+            labels: Array.from({length: aliceBits.length}, (_, i) => `Q${i + 1}`),
+            datasets: [{
+                label: 'Eavesdropped Bits',
+                data: eavesdropBits,
+                borderColor: 'red',
+                fill: false
+            }]
+        }
+    });
 }

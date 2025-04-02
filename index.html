@@ -3,43 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BB84 Quantum Key Distribution</title>
+    <title>BB84 Quantum Cryptography Simulation</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
     <script src="script.js" defer></script>
 </head>
 <body>
+
     <header>
-        <h1>BB84 Quantum Key Distribution</h1>
-        <p>Visualizing the secure quantum key exchange process with BB84 protocol.</p>
+        <h1>BB84 Quantum Cryptography Simulation</h1>
+        <p>Experience quantum key distribution interactively.</p>
+        <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider round"></span>
+        </label>
     </header>
-    
-    <div class="container">
-        <div class="simulation">
-            <h2>Quantum Transmission</h2>
-            <canvas id="blochSphere"></canvas>
-            <p>Qubits are encoded using Alice's random bases and transmitted securely.</p>
-        </div>
 
-        <div class="step-visuals">
-            <h2>BB84 Protocol Steps</h2>
-            <canvas id="bb84Steps"></canvas>
-            <p>Step-by-step visualization of Alice’s qubits, Bob’s measurements, and key agreement.</p>
-        </div>
+    <main>
+        <section id="controls">
+            <h2>Simulation Settings</h2>
+            <label for="numQubits">Number of Qubits:</label>
+            <input type="number" id="numQubits" value="10" min="5" max="100">
+            <label for="eavesdrop">Enable Eavesdropping?</label>
+            <input type="checkbox" id="eavesdrop">
+            <button onclick="runSimulation()">Start Simulation</button>
+        </section>
 
-        <div class="results">
-            <h2>Key Agreement & Eavesdropping</h2>
+        <section id="quantumState">
+            <h2>Quantum State Visualization</h2>
+            <div id="animationContainer"></div>
+        </section>
+
+        <section id="visuals">
+            <h2>Key Distribution Analysis</h2>
             <canvas id="keyComparisonChart"></canvas>
-            <p>Comparing Alice’s and Bob’s keys. Differences indicate eavesdropping!</p>
-        </div>
+        </section>
 
-        <div class="past-results">
-            <h2>Past Results</h2>
-            <canvas id="pastResultsChart"></canvas>
-            <p>Tracking past successful key agreements and error rates over multiple runs.</p>
-        </div>
-    </div>
+        <section id="eavesdropping">
+            <h2>Eavesdropping Impact</h2>
+            <canvas id="eavesdropChart"></canvas>
+        </section>
 
-    <button onclick="runBB84()">Run BB84 Simulation</button>
+    </main>
+
+    <footer>
+        <p>© 2025 BB84 Quantum Simulation</p>
+    </footer>
+
 </body>
 </html>
